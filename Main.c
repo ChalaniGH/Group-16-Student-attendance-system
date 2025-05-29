@@ -170,3 +170,57 @@ void search_student() {
     if (!found) printf(RED "\nStudent not found!\n" RESET);
     fclose(fp);
 }
+
+
+void update_student() {
+    system(CLEAR);
+    FILE *fp = fopen("students.dat", "rb+");
+    Student s;
+    int roll, found = 0;
+    printf(YELLOW "----------- Update Student -----------\n" RESET);
+    printf("Enter roll number to update: ");
+    scanf("%d", &roll);
+    while (fread(&s, sizeof(Student), 1, fp)) {
+        if (s.roll_no == roll) {
+            printf("Enter new name: ");
+            getchar();
+            fgets(s.name, MAX_NAME, stdin);
+            s.name[strcspn(s.name, "\n")] = 0;
+            printf("Enter new class: ");
+            fgets(s.class_name, MAX_CLASS, stdin);
+            s.class_name[strcspn(s.class_name, "\n")] = 0;
+            fseek(fp, -sizeof(Student), SEEK_CUR);
+            fwrite(&s, sizeof(Student), 1, fp);
+            printf(GREEN "\nRecord updated!\n" RESET);
+            found = 1;
+            break;
+        }
+    }
+    if (!found) printf(RED "\nStudent not found!\n" RESET);
+    fclose(fp);
+}
+
+void delete_student() {
+    system(CLEAR);
+    FILE *fp = fopen("students.dat", "rb");
+    FILE *temp = fopen("temp.dat", "wb");
+    Student s;
+    int roll, found = 0;
+    printf(YELLOW "----------- Delete Student -----------\n" RESET);
+    printf("Enter roll number to delete: ");
+    scanf("%d", &roll);
+    while (fread(&s, sizeof(Student), 1, fp)) {
+        if (s.roll_no != roll) {
+            fwrite(&s, sizeof(Student), 1, temp);
+        } else {
+            found = 1;
+        }
+    }
+    fclose(fp);
+    fclose(temp);
+    remove("students.dat");
+    rename("temp.dat", "students.dat");
+    if (found) printf(GREEN "\nRecord deleted!\n" RESET);
+    else printf(RED "\nStudent not found!\n" RESET);
+    getchar();
+}
