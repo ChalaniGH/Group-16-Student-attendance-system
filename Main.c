@@ -121,3 +121,52 @@ void save_student(Student s) {
     fclose(fp);
 }
 
+void view_students() {
+    system(CLEAR);
+    FILE *fp = fopen("students.dat", "rb");
+    Student s;
+    printf(YELLOW "----------- Student List -----------\n" RESET);
+    printf(BLUE "\n%-10s %-20s %-10s\n" RESET, "Roll No", "Name", "Class");
+    printf("---------------------------------------------\n");
+    while (fread(&s, sizeof(Student), 1, fp)) {
+        printf("%-10d %-20s %-10s\n", s.roll_no, s.name, s.class_name);
+    }
+    fclose(fp);
+}
+
+void search_student() {
+    system(CLEAR);
+    FILE *fp = fopen("students.dat", "rb");
+    Student s;
+    int roll, found = 0;
+    char name[MAX_NAME];
+    printf(YELLOW "----------- Search Student -----------\n" RESET);
+    printf("Search by:\n1. Roll Number\n2. Name\nEnter choice: ");
+    int ch;
+    scanf("%d", &ch);
+    getchar();
+    if (ch == 1) {
+        printf("Enter roll number: ");
+        scanf("%d", &roll);
+        while (fread(&s, sizeof(Student), 1, fp)) {
+            if (s.roll_no == roll) {
+                printf(GREEN "\nFound: %d | %s | %s\n" RESET, s.roll_no, s.name, s.class_name);
+                getchar();
+                found = 1;
+                break;
+            }
+        }
+    } else {
+        printf("Enter name: ");
+        fgets(name, MAX_NAME, stdin);
+        name[strcspn(name, "\n")] = 0;
+        while (fread(&s, sizeof(Student), 1, fp)) {
+            if (strcmp(s.name, name) == 0) {
+                printf(GREEN "\nFound: %d | %s | %s\n" RESET, s.roll_no, s.name, s.class_name);
+                found = 1;
+            }
+        }
+    }
+    if (!found) printf(RED "\nStudent not found!\n" RESET);
+    fclose(fp);
+}
