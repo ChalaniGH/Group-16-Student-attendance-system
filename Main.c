@@ -71,3 +71,53 @@ int main() {
     }
     return 0;
 }
+
+void print_main_menu() {
+    printf(CYAN "========================================================================================================================================================================\n" RESET);
+ printf(YELLOW
+    "                  _____ _             _            _             _   _                 _                         _____           _                 \n"
+    "                 / ____| |           | |          | |       /\\  | | | |               | |                       / ____|         | |                \n"
+    "                | (___ | |_ _   _  __| | ___ _ __ | |_     /  \\ | |_| |_ ___ _ __   __| | __ _ _ __   ___ ___  | (___  _   _ ___| |_ ___ _ __ ___  \n"
+    "                 \\___ \\| __| | | |/ _` |/ _ \\ '_ \\| __|   / /\\ \\| __| __/ _ \\ '_ \\ / _` |/ _` | '_ \\ / __/ _ \\  \\___ \\| | | / __| __/ _ \\ '_ ` _ \\ \n"
+    "                 ____) | |_| |_| | (_| |  __/ | | | |_   / ____ \\ |_| ||  __/ | | | (_| | (_| | | | | (_|  __/  ____) | |_| \\__ \\ ||  __/ | | | | |\n"
+    "                |_____/ \\__|\\__,_|\\__,_|\\___|_| |_|\\__| /_/    \\_\\__|\\__\\___|_| |_|\\__,_|\\__,_|_| |_|\\___\\___| |_____/ \\__, |___/\\__\\___|_| |_| |_|\n"
+    "                                                                                                                        __/ |                          \n"
+    "                                                                                                                       |___/                           \n"
+    RESET);
+    printf(CYAN "========================================================================================================================================================================\n" RESET);
+
+    printf(YELLOW "  1. Add Student\n" RESET);
+    printf(YELLOW "  2. View Students\n" RESET);
+    printf(YELLOW "  3. Search Student\n" RESET);
+    printf(YELLOW "  4. Update Student\n" RESET);
+    printf(YELLOW "  5. Delete Student\n" RESET);
+    printf(YELLOW "  6. Mark Attendance\n" RESET);
+    printf(YELLOW "  7. View Attendance\n" RESET);
+    printf(RED    "  0. Exit\n" RESET);
+    printf(CYAN "------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" RESET);
+    printf("Enter your choice: ");
+}
+
+void add_student() {
+    system(CLEAR);
+    Student s;
+    printf(YELLOW "----------- Add Student -----------\n" RESET);
+    printf("Enter roll number: ");
+    scanf("%d", &s.roll_no);
+    getchar();
+    printf("Enter name: ");
+    fgets(s.name, MAX_NAME, stdin);
+    s.name[strcspn(s.name, "\n")] = 0;
+    printf("Enter class: ");
+    fgets(s.class_name, MAX_CLASS, stdin);
+    s.class_name[strcspn(s.class_name, "\n")] = 0;
+    save_student(s);
+    printf(GREEN "\nStudent added successfully!\n" RESET);
+}
+
+void save_student(Student s) {
+    FILE *fp = fopen("students.dat", "ab");
+    fwrite(&s, sizeof(Student), 1, fp);
+    fclose(fp);
+}
+
