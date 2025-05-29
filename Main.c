@@ -224,3 +224,44 @@ void delete_student() {
     else printf(RED "\nStudent not found!\n" RESET);
     getchar();
 }
+
+void mark_attendance() {
+    system(CLEAR);
+    FILE *fp = fopen("students.dat", "rb");
+    Student s;
+    Attendance a;
+    char date[MAX_DATE];
+    printf(YELLOW "----------- Mark Attendance -----------\n" RESET);
+    printf("Enter date (YYYY-MM-DD): ");
+    scanf("%s", date);
+    while (fread(&s, sizeof(Student), 1, fp)) {
+        a.roll_no = s.roll_no;
+        strcpy(a.date, date);
+        printf("Mark attendance for %s (Roll %d) [P/A]: ", s.name, s.roll_no);
+        scanf(" %c", &a.status);
+        save_attendance(a);
+    }
+    fclose(fp);
+    printf(GREEN "\nAttendance marked for date %s.\n" RESET, date);
+    getchar();
+}
+
+void save_attendance(Attendance a) {
+    FILE *fp = fopen("attendance.dat", "ab");
+    fwrite(&a, sizeof(Attendance), 1, fp);
+    fclose(fp);
+}
+
+void view_attendance() {
+    system(CLEAR);
+    FILE *fp = fopen("attendance.dat", "rb");
+    Attendance a;
+    printf(YELLOW "----------- Attendance Records -----------\n" RESET);
+    printf(BLUE "\n%-10s %-12s %-8s\n" RESET, "Roll No", "Date", "Status");
+    printf("------------------------------------------\n");
+    while (fread(&a, sizeof(Attendance), 1, fp)) {
+        printf("%-10d %-12s %-8c\n", a.roll_no, a.date, a.status);
+    }
+    fclose(fp);
+    getchar();
+}
